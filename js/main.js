@@ -15,21 +15,35 @@
 		// 4 = complete
 
 		xhr.onreadystatechange = function() {
-			if ((xhr.readyState == 4) && (xhr.status == 200 || xhr.status == 304)) {
-		
+			if ((xhr.readyState == 4) && (xhr.status == 200 || xhr.status == 304)) {		
 				var body = document.getElementsByTagName("body")[0];
-				var d = document.createElement("div");
-				body.appendChild(d);
+				var heading = xhr.responseXML.getElementsByTagName("heading")[0].firstChild.nodeValue;
+				var h2 = document.createElement("h2");
+				var h2Text = document.createTextNode(heading);
+				h2.appendChild(h2Text);
+				body.appendChild(h2);
 
-				var div = document.getElementsByTagName("div")[0];
-				div.innerHTML = xhr.responseText;
+				var list = document.createElement("ul");
+				var items = xhr.responseXML.getElementsByTagName("items")[0];
+				items = items.getElementsByTagName("item");
+
+				for (var i = 0; i<items.length; i++) {
+					var item = items[i].firstChild.nodeValue;
+					var li = document.createElement("li");
+					var liText = document.createTextNode(item);
+
+					li.appendChild(liText);
+					list.appendChild(li);
+				}
+				body.appendChild(list);
+
 
 				body.removeChild(link);
 			}
 		};
 
 		// open the request
-		xhr.open("GET", "files/ajax.html", true);
+		xhr.open("GET", "files/ajax.xml", true);
 
 		// send the request
 		xhr.send(null);

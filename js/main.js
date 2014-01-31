@@ -17,18 +17,20 @@
 		xhr.onreadystatechange = function() {
 			if ((xhr.readyState == 4) && (xhr.status == 200 || xhr.status == 304)) {		
 				var body = document.getElementsByTagName("body")[0];
-				var heading = xhr.responseXML.getElementsByTagName("heading")[0].firstChild.nodeValue;
+
+				var json = JSON.parse(xhr.responseText);
+
+				var heading = json.heading;
 				var h2 = document.createElement("h2");
 				var h2Text = document.createTextNode(heading);
 				h2.appendChild(h2Text);
 				body.appendChild(h2);
 
 				var list = document.createElement("ul");
-				var items = xhr.responseXML.getElementsByTagName("items")[0];
-				items = items.getElementsByTagName("item");
+				var items = json.items;
 
-				for (var i = 0; i<items.length; i++) {
-					var item = items[i].firstChild.nodeValue;
+				for (var key in items) {
+					var item = items[key];
 					var li = document.createElement("li");
 					var liText = document.createTextNode(item);
 
@@ -43,7 +45,7 @@
 		};
 
 		// open the request
-		xhr.open("GET", "files/ajax.xml", true);
+		xhr.open("GET", "files/ajax.json", true);
 
 		// send the request
 		xhr.send(null);
